@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.ContentResultMatchers;
+import org.springframework.test.web.servlet.result.HeaderResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
@@ -58,7 +59,19 @@ public class WebTest {
 
         //设置预期值，与真实值比较
         ContentResultMatchers content = MockMvcResultMatchers.content();
-        ResultMatcher result = content.json("{\"id\":1,\"name\":\"springboottest2\",\"type\":\"programming\",\"description\":\"233tew\"}");
+        ResultMatcher result = content.json("{\"id\":1,\"name\":\"springboottest2\",\"type\"" +
+                ":\"programming\",\"description\":\"233tew\"}");
         resultAction.andExpect(result);
+    }
+
+    @Test
+    void testContentType(@Autowired MockMvc mockMvc) throws Exception {
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books");
+        ResultActions resultAction = mockMvc.perform(builder);
+
+        //设置预期值，与真实值比较
+        HeaderResultMatchers header = MockMvcResultMatchers.header();
+        ResultMatcher string = header.string("Content-Type", "application/json");
+        resultAction.andExpect(string);
     }
 }
